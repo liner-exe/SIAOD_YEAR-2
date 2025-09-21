@@ -7,7 +7,7 @@ void task_1()
 	unsigned int x;
 
 	x = 0xFFFFFFFF;
-	unsigned int mask = ~((1 << 3) | (1 << 4) | (1 << 5) | (1 << 6));
+	unsigned int mask = 0xFFFFFF87;
 	unsigned int result1 = x & mask;
 	unsigned int result2 = x & ~((1 << 3) | (1 << 4) | (1 << 5) | (1 << 6));
 
@@ -18,10 +18,10 @@ void task_1()
 
 void task_2()
 {
-	unsigned int x;
-	unsigned int mask = (1 << 12) | (1 << 11) | (1 << 1);
+	unsigned int x = 0x0;
+	unsigned int mask = 0x1802;
 	unsigned int result1 = x & mask;
-	unsigned int result2 = x & ~((1 << 12) | (1 << 11) | (1 << 1));
+	unsigned int result2 = x & ((1 << 12) | (1 << 11) | (1 << 1));
 
 	std::cout << "Задача 2 (установка): " << std::endl;
 	std::cout << "result1 = 0x" << std::hex << result1 << " (" << std::bitset<32>(result1) << ")" << std::endl;
@@ -48,7 +48,7 @@ void task_4()
 void task_5()
 {
 	unsigned int x = 0xAAAAAAAA;
-	unsigned int mask = (1 << 2) | (1 << 17) | (1 << 4) | (1 << 29);
+	unsigned int mask = 0x20020014;
 	unsigned int result1 = x ^ mask;
 	unsigned int result2 = x ^ ((1 << 2) | (1 << 17) | (1 << 4) | (1 << 29));
 
