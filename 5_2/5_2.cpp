@@ -4,9 +4,7 @@
 
 void task_1()
 {
-	unsigned int x;
-
-	x = 0xFFFFFFFF;
+	unsigned int x = 0xFFFFFFFF;
 	unsigned int mask = 0xFFFFFF87;
 	unsigned int result1 = x & mask;
 	unsigned int result2 = x & ~((1 << 3) | (1 << 4) | (1 << 5) | (1 << 6));
