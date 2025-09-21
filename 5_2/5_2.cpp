@@ -20,8 +20,8 @@ void task_2()
 {
 	unsigned int x = 0x0;
 	unsigned int mask = 0x1802;
-	unsigned int result1 = x & mask;
-	unsigned int result2 = x & ((1 << 12) | (1 << 11) | (1 << 1));
+	unsigned int result1 = x | mask;
+	unsigned int result2 = x | ((1 << 12) | (1 << 11) | (1 << 1));
 
 	std::cout << "Задача 2 (установка): " << std::endl;
 	std::cout << "result1 = 0x" << std::hex << result1 << " (" << std::bitset<32>(result1) << ")" << std::endl;
