@@ -1,70 +1,156 @@
-#include <bitset>
+#include <algorithm>
+#include <chrono>
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <random>
 #include <windows.h>
 
-void task_1()
+struct Reader
 {
-	unsigned int x = 0xFFFFFFFF;
-	unsigned int mask = 0xFFFFFF87;
-	unsigned int result1 = x & mask;
-	unsigned int result2 = x & ~((1 << 3) | (1 << 4) | (1 << 5) | (1 << 6));
+    int ticketNumber;
+    char name[50];
+    char address[100];
+};
 
-	std::cout << "Задача 1 (обнуление): " << std::endl;
-	std::cout << "result1 = 0x" << std::hex << result1 << " (" << std::bitset<32>(result1) << ")" << std::endl;
-	std::cout << "result2 = 0x" << std::hex << result2 << " (" << std::bitset<32>(result2) << ")" << std::endl;
+void createBinaryFile(const std::string& filename, int entriesCount)
+{
+    std::ofstream fout(filename, std::ios::binary);
+    if (!fout)
+    {
+        std::cerr << "Ошибка при открытии файла " << filename << std::endl;
+        return;
+    }
+
+    std::random_device rand;
+    std::mt19937 gen(rand());
+    std::uniform_int_distribution<int> dist(10000, 99999);
+
+    std::vector<int> used;
+    for (int i = 0; i < entriesCount; i++)
+    {
+        Reader reader;
+        do
+        {
+            reader.ticketNumber = dist(gen);
+        } while (std::find(used.begin(), used.end(), reader.ticketNumber) != used.end());
+
+        used.push_back(reader.ticketNumber);
+
+        snprintf(reader.name, sizeof(reader.name), "ФИО_%d", i);
+        sprintf(reader.address, "Адрес_%d", i);
+
+        fout.write(reinterpret_cast<char*>(&reader), sizeof(reader));
+    }
+
+    fout.close();
 }
 
-void task_2()
+bool linearSearch(const std::string filename, int key, Reader& result)
 {
-	unsigned int x = 0x0;
-	unsigned int mask = 0x1802;
-	unsigned int result1 = x | mask;
-	unsigned int result2 = x | ((1 << 12) | (1 << 11) | (1 << 1));
+    std::ifstream fin(filename, std::ios::binary);
+    if (!fin)
+    {
+        std::cerr << "Ошибка при открытии файла " << filename << std::endl;
+        return false;
+    }
 
-	std::cout << "Задача 2 (установка): " << std::endl;
-	std::cout << "result1 = 0x" << std::hex << result1 << " (" << std::bitset<32>(result1) << ")" << std::endl;
-	std::cout << "result2 = 0x" << std::hex << result2 << " (" << std::bitset<32>(result2) << ")" << std::endl;
+    Reader reader;
+    while (fin.read(reinterpret_cast<char*>(&reader), sizeof(reader)))
+    {
+        if (reader.ticketNumber == key)
+        {
+            result = reader;
+            return true;
+        }
+    }
+
+    return false;
 }
 
-void task_3()
+bool binarySearch(const std::string& filename, int key, Reader& result)
 {
-	unsigned int x = 7;
-	unsigned int result = x << 5;
+    std::ifstream fin(filename, std::ios::binary);
+    if (!fin)
+    {
+        std::cerr << "Ошибка при открытии файла " << filename << std::endl;
+        return false;
+    }
 
-	std::cout << "Задача 3 (умножение): " << std::endl;
-	std::cout << std::dec << x << " * 32 = " << result << std::endl;
+    fin.seekg(0, std::ios::end);
+    int n = fin.tellg() / sizeof(Reader);
+    int left = 0, right = n - 1;
+
+    while (left <= right)
+    {
+        int middle = (left + right) / 2;
+        fin.seekg(middle * sizeof(Reader), std::ios::beg);
+        Reader reader;
+        fin.read(reinterpret_cast<char*>(&reader), sizeof(reader));
+
+        if (reader.ticketNumber == key)
+        {
+            result = reader;
+            return true;
+        }
+
+        if (reader.ticketNumber < key)
+        {
+            left = middle + 1;
+        }
+        else
+        {
+            right = middle - 1;
+        }
+    }
+
+    return false;
 }
 
-void task_4()
+void testSearch(const std::string& filename, int entries)
 {
-	unsigned int x = 1024;
-	unsigned int result = x >> 5;
+    createBinaryFile(filename, entries);
 
-	std::cout << "Задача 4 (деление): " << std::endl;
-	std::cout << std::dec << x << " / 32 = " << result << std::endl;
-}
-void task_5()
-{
-	unsigned int x = 0xAAAAAAAA;
-	unsigned int mask = 0x20020014;
-	unsigned int result1 = x ^ mask;
-	unsigned int result2 = x ^ ((1 << 2) | (1 << 17) | (1 << 4) | (1 << 29));
+    std::ifstream fin(filename, std::ios::binary);
+    std::vector<int> keys;
+    Reader reader;
 
-	std::cout << "Задача 5 (инверсия): " << std::endl;
-	std::cout << "result1 = 0x" << std::hex << result1 << " (" << std::bitset<32>(result1) << ")" << std::endl;
-	std::cout << "result2 = 0x" << std::hex << result2 << " (" << std::bitset<32>(result2) << ")" << std::endl;
+    while (fin.read(reinterpret_cast<char*>(&reader), sizeof(reader)))
+    {
+        keys.push_back(reader.ticketNumber);
+    }
+    fin.close();
+
+    int key = keys[entries / 2];
+
+    Reader result;
+
+    auto start = std::chrono::high_resolution_clock::now();
+    bool foundLinear = linearSearch(filename, key, result);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto deltaTimeLinear = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+    start = std::chrono::high_resolution_clock::now();
+    bool foundBinary = binarySearch(filename, key, result);
+    end = std::chrono::high_resolution_clock::now();
+    auto deltaTimeBinary = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+
+    std::cout << "------------------------------------------------------------" << std::endl;
+    std::cout << "Файл: " << entries << " записей" << std::endl;
+    std::cout << "Ключ: " << key << std::endl;
+    std::cout << "Линейный поиск: " << (foundLinear ? "найден" : "не найден") << ", время = " <<
+        deltaTimeLinear.count() << " мкс" << std::endl;
+    std::cout << "Бинарный поиск: " << (foundBinary ? "найден" : "не найден") << ", время = " <<
+        deltaTimeBinary.count()<< " мкс" << std::endl;
+    std::cout << "------------------------------------------------------------" << std::endl;
 }
 
 int main()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(CP_UTF8);
 
-	// task_1();
-	// task_2();
-	// task_3();
-	// task_4();
-	// task_5();
-
-	return 0;
+    testSearch("test100.bin", 100);
+    testSearch("test1000.bin", 1000);
+    testSearch("test10000.bin", 10000);
 }
