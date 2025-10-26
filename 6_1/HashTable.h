@@ -14,23 +14,17 @@ class HashTable
 	size_t size;
 	size_t capacity;
 	const double MAX_LOAD_FACTOR = 0.75;
-	std::string CHAIN_DELIMITER = " -> ";
 
-	unsigned int hashFunction(const std::string& key);
+	unsigned int hashFunction(const std::string& key) const;
 
 	void rehash();
 public:
-	HashTable(int initialCapacity = 8) : size(0), capacity(initialCapacity)
-	{
-		table.resize(capacity);
-	}
+	HashTable(int initialCapacity);
 
 	void insert(const std::string& code, const std::string& university);
 	void remove(const std::string& code);
-	void search(const std::string& code);
+	void search(const std::string& code) const;
 	void display() const;
-
-	void autofill();
 };
 
 #endif //HASHTABLE_H

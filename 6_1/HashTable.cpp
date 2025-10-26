@@ -2,16 +2,22 @@
 
 #include <iomanip>
 
-unsigned int HashTable::hashFunction(const std::string &key) {
+HashTable::HashTable(int initialCapacity) : size(0), capacity(initialCapacity)
+{
+	table.resize(capacity);
+}
+
+unsigned int HashTable::hashFunction(const std::string &key) const
+{
 	unsigned int hash = 0;
 	const int p = 31;
 
 	for (char c : key)
 	{
-		hash = (hash * p + c) % capacity;
+		hash = hash * p + c;
 	}
 
-	return hash;
+	return hash % capacity;
 }
 
 void HashTable::rehash() {
@@ -36,12 +42,12 @@ void HashTable::rehash() {
 
 void HashTable::insert(const std::string &code, const std::string &university)
 {
-	if ((double)size / (double)capacity > MAX_LOAD_FACTOR)
+	if (static_cast<double>(size) / static_cast<double>(capacity) > MAX_LOAD_FACTOR)
 	{
 		rehash();
 	}
 
-	size_t index = hashFunction(code);
+	const size_t index = hashFunction(code);
 
 	for (auto& entry : table[index])
 	{
@@ -67,30 +73,26 @@ void HashTable::insert(const std::string &code, const std::string &university)
 
 void HashTable::remove(const std::string &code)
 {
-	size_t index = hashFunction(code);
-
+	const size_t index = hashFunction(code);
 	auto& chain = table[index];
-	auto it = chain.begin();
 
-	if (it != chain.end())
+	for (auto it = chain.begin(); it != chain.end(); ++it)
 	{
 		if (it->code == code)
 		{
-			it = chain.erase(it);
+			chain.erase(it);
 			size--;
 			std::cout << "\n>>> Запись с ключом '" << code << "' успешно удалена из ячейки " << index << ".\n";
 			return;
 		}
-
-		++it;
 	}
 
 	std::cout << "Ошибка удаления. Запись с ключом " << code << " не найдена.";
 }
 
-void HashTable::search(const std::string &code)
+void HashTable::search(const std::string &code) const
 {
-	size_t index = hashFunction(code);
+	const size_t index = hashFunction(code);
 	int probe_count = 0;
 
 	for (const auto& entry : table[index])
@@ -134,7 +136,7 @@ void HashTable::display() const
 			{
 				if (!first)
 				{
-					std::cout << CHAIN_DELIMITER;
+					std::cout << " -> ";
 				}
 
 				entry.print();
