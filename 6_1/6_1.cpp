@@ -58,35 +58,35 @@ int main()
 				std::cin >> name;
 
 				table.insert(key, name);
-				// pause();
+				pause();
 				break;
 			case 2:
 				std::cout << "Введите код специальности, который необходимо найти: ";
 				std::cin >> name;
 				table.search(name);
-				// pause();
+				pause();
 				break;
 			case 3:
 				std::cout << "Введите код специальности, который необходимо удалить: ";
 				std::cin >> name;
 				table.remove(name);
-				// pause();
+				pause();
 				break;
 			case 4:
 				table.display();
-				// pause();
+				pause();
 				break;
 			case 5:
 				fill_demo(table);
-				// pause();
+				pause();
 				break;
 			case 6:
 				std::cout << "Завершение работы..." << std::endl;
-				// pause();
+				pause();
 				return 0;
 			default:
 				std::cout << "Неизвестная команда. Попробуйте ещё раз." << std::endl;
-				// pause();
+				pause();
 		}
 	}
 }

@@ -8,4 +8,6 @@ add_executable(SIAOD_6_1 6_1.cpp
         HashTable.cpp
         Specialization.h)
 
-target_link_options(SIAOD_6_1 PRIVATE -static-libgcc -static-libstdc++)
+if (WIN32)
+    target_link_options(SIAOD_6_1 PRIVATE -static-libgcc -static-libstdc++)
+endif()
