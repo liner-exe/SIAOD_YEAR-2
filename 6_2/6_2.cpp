@@ -190,5 +190,7 @@ int main()
 	runTask1Demo();
 	runTask2Demo();
 
+	system("pause");
+
 	return 0;
 }
