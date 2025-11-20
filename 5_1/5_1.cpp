@@ -203,7 +203,7 @@ int main()
 	// task2_c();
 
 	// Задание 3
-	// utils5_1::create_test_file();
+	utils5_1::create_test_file();
 	// task3_a();
 	// task3_b();
 

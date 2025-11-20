@@ -10,4 +10,5 @@ add_executable(SIAOD_6_1 6_1.cpp
 
 if (WIN32)
     target_link_options(SIAOD_6_1 PRIVATE -static-libgcc -static-libstdc++)
+    target_link_options(SIAOD_6_1 PRIVATE -static -lwinpthread)
 endif()

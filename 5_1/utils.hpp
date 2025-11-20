@@ -7,7 +7,7 @@ namespace utils5_1
 {
 	void create_test_file()
 	{
-		std::ofstream test_file("input.txt");
+		std::ofstream test_file("input.bin", std::ios::binary);
 
 		const int NUM_COUNT = 1000000;
 

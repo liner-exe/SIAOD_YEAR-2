@@ -13,6 +13,11 @@ struct Reader
     char address[100];
 };
 
+bool compareByTicket(const Reader& reader1, const Reader& reader2)
+{
+    return reader1.ticketNumber < reader2.ticketNumber;
+}
+
 void createBinaryFile(const std::string& filename, int entriesCount)
 {
     std::ofstream fout(filename, std::ios::binary);
@@ -27,6 +32,8 @@ void createBinaryFile(const std::string& filename, int entriesCount)
     std::uniform_int_distribution<int> dist(10000, 99999);
 
     std::vector<int> used;
+    std::vector<Reader> readers;
+
     for (int i = 0; i < entriesCount; i++)
     {
         Reader reader;
@@ -38,15 +45,24 @@ void createBinaryFile(const std::string& filename, int entriesCount)
         used.push_back(reader.ticketNumber);
 
         snprintf(reader.name, sizeof(reader.name), "ФИО_%d", i);
-        sprintf(reader.address, "Адрес_%d", i);
+        snprintf(reader.address, sizeof(reader.address), "Адрес_%d", i);
 
-        fout.write(reinterpret_cast<char*>(&reader), sizeof(reader));
+        readers.push_back(reader);
+    }
+
+    std::sort(readers.begin(), readers.end(), compareByTicket);
+
+    for (const auto& reader : readers)
+    {
+        fout.write(reinterpret_cast<const char*>(&reader), sizeof(reader));
     }
 
     fout.close();
 }
 
-bool linearSearch(const std::string filename, int key, Reader& result)
+
+
+bool linearSearch(const std::string& filename, int key, Reader& result)
 {
     std::ifstream fin(filename, std::ios::binary);
     if (!fin)
@@ -121,7 +137,7 @@ void testSearch(const std::string& filename, int entries)
     }
     fin.close();
 
-    int key = keys[entries / 2];
+    int key = keys[entries / 3];
 
     Reader result;
 
@@ -143,6 +159,22 @@ void testSearch(const std::string& filename, int entries)
     std::cout << "Бинарный поиск: " << (foundBinary ? "найден" : "не найден") << ", время = " <<
         deltaTimeBinary.count()<< " мкс" << std::endl;
     std::cout << "------------------------------------------------------------" << std::endl;
+}
+
+bool isFileSorted(const std::string& filename)
+{
+    std::ifstream fin(filename, std::ios::binary);
+    Reader prev, current;
+
+    if (!fin) return false;
+
+    while (fin.read(reinterpret_cast<char*>(&current), sizeof(Reader)))
+    {
+        if (current.ticketNumber < prev.ticketNumber) return false;
+        prev = current;
+    }
+
+    return true;
 }
 
 int main()
