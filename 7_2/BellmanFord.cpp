@@ -67,6 +67,8 @@ void Graph::loadTestData()
 {
     std::cout << "Создание тестового графа..." << std::endl;
 
+    vertices = 8;
+
     addEdge(0, 1, 23.0); addEdge(1, 0, 23.0);
     addEdge(0, 2, 12.0); addEdge(2, 0, 12.0);
     addEdge(1, 2, 25.0); addEdge(2, 1, 25.0);
