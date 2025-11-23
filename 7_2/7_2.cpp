@@ -4,31 +4,61 @@
 
 #include "BellmanFord.h"
 
+void printMenu()
+{
+    std::cout << "\n--- МЕНЮ (Вариант 16) ---\n";
+    std::cout << "1. Ввести произвольный граф с клавиатуры.\n";
+    std::cout << "2. Загрузить тестовый граф из задания.\n";
+    std::cout << "0. Выход\n";
+    std::cout << "Ваш выбор: ";
+}
+
 int main() {
     SetConsoleCP(CP_UTF8);
     SetConsoleOutputCP(CP_UTF8);
 
-    const int V = 8;
-    Graph graph(V);
+    Graph graph;
+    short choice;
 
-    std::cout << "Создание тестового графа..." << std::endl;
+    printMenu();
+    std::cin >> choice;
 
-    graph.addEdge(0, 1, 23.0); graph.addEdge(1, 0, 23.0);
-    graph.addEdge(0, 2, 12.0); graph.addEdge(2, 0, 12.0);
-    graph.addEdge(1, 2, 25.0); graph.addEdge(2, 1, 25.0);
-    graph.addEdge(1, 4, 22.0); graph.addEdge(4, 1, 22.0);
-    graph.addEdge(1, 7, 35.0); graph.addEdge(7, 1, 35.0);
-    graph.addEdge(2, 3, 18.0); graph.addEdge(3, 2, 18.0);
-    graph.addEdge(3, 5, 20.0); graph.addEdge(5, 3, 20.0);
-    graph.addEdge(4, 6, 14.0); graph.addEdge(6, 4, 14.0);
-    graph.addEdge(4, 5, 23.0); graph.addEdge(5, 4, 23.0);
-    graph.addEdge(5, 6, 24.0); graph.addEdge(6, 5, 24.0);
-    graph.addEdge(6, 7, 16.0); graph.addEdge(7, 6, 16.0);
+    if (choice == 1)
+    {
+        graph.inputGraph();
+    }
+    else if (choice == 2)
+    {
+        graph.loadTestData();
+    }
+    else
+    {
+        std::cout << "Некорректный выбор. Загружен граф по умолчанию." << std::endl;
+        graph.loadTestData();
+    }
 
-    int startNode = 1;
+    if (graph.getVertices() > 0)
+    {
+        int startNode;
+        std::cout << "Введите стартовую вершину для поиска кратчайшего " <<
+                     "пути (от 1 до " << graph.getVertices() << "): " << std::endl;
+        std::cin >> startNode;
 
-    std::cout << "Запуск алгоритма Беллмана-Форда от вершины 1:" <<std::endl;
-    graph.BellmanFord(startNode);
+        startNode--;
+
+        if (startNode >= 0 && startNode < graph.getVertices())
+        {
+            graph.BellmanFord(startNode);
+        }
+        else
+        {
+            std::cout << "Некорректная стартовая вершина." << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "Граф не был создан." << std::endl;
+    }
 
     return 0;
 }
