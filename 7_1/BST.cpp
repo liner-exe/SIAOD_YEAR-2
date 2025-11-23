@@ -44,7 +44,7 @@ void BinarySearchTree::calculateSumAndCount(Node* node, double& sum, int& count)
 {
     if (node == nullptr) return;
 
-    sum += sumLeaves(node);
+    sum += node->data;
     count++;
 
     calculateSumAndCount(node->left, sum, count);
