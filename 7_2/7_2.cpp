@@ -59,5 +59,7 @@ int main() {
         std::cout << "Граф не был создан." << std::endl;
     }
 
+    system("pause");
+
     return 0;
 }
