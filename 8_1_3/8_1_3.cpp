@@ -1,7 +1,7 @@
 #include <string>
-#include <vector>
 #include <iostream>
 #include <map>
+#include <windows.h>
 
 void encodeL78(std::string text)
 {
@@ -36,6 +36,9 @@ void encodeL78(std::string text)
 
 int main()
 {
+	SetConsoleCP(CP_UTF8);
+	SetConsoleOutputCP(CP_UTF8);
+
 	std::string data = "roporopoterropoterter";
 	encodeL78(data);
 	return 0;
