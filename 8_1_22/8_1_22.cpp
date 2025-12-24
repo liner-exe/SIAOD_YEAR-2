@@ -7,7 +7,7 @@ int main()
 	SetConsoleCP(CP_UTF8);
 	SetConsoleOutputCP(CP_UTF8);
 
-	std::cout << "Алгоритм Хаффмана\n";
+	std::cout << "Алгоритм Хаффмана" << std::endl;
 
 	std::string filename;
 	std::cout << "Введите имя файла: ";
@@ -22,14 +22,14 @@ int main()
 	std::string restored = coder.decompress(compressed);
 	writeFile("decompressed.txt", restored);
 
-	std::cout << "Сжатие завершено\n";
-	std::cout << "Сжатый файл: compressed.bin\n";
-	std::cout << "Восстановленный файл: decompressed.txt\n";
+	std::cout << "Сжатие завершено" << std::endl;
+	std::cout << "Сжатый файл: compressed.bin" << std::endl;
+	std::cout << "Восстановленный файл: decompressed.txt" << std::endl;
 
 	if (original == restored)
-		std::cout << "Оригинальный файл совпадает с восстановленным.\n";
+		std::cout << "Оригинальный файл совпадает с восстановленным." << std::endl;
 	else
-		std::cout << "Ошибка восстановления.\n";
+		std::cout << "Ошибка восстановления." << std::endl;
 
 	return 0;
 }
