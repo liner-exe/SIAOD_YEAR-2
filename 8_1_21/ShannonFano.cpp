@@ -127,11 +127,11 @@ std::string ShannonCompressor::read_bits(std::ifstream& in, unsigned long long b
 }
 
 void ShannonCompressor::print_table() {
-    std::cout << "\nТаблица кодирования\n";
+    std::cout << std::endl << "Таблица кодирования" << std::endl;
     for (auto& s : stats) {
         std::string visual = to_utf8(s.symbol);
         if (visual == " ") visual = "' '";
-        std::cout << visual << "\t| " << s.count << "\t| " << s.bin_code << '\n';
+        std::cout << visual << "\t| " << s.count << "\t| " << s.bin_code << std::endl;
     }
 }
 

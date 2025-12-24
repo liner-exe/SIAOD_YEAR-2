@@ -46,10 +46,10 @@ int main()
 	f << my_text;
 	f.close();
 
-	std::cout << "Алгоритм Шеннона-Фано\n";
+	std::cout << "Алгоритм Шеннона-Фано" << std::endl;
 
 	if (worker.run_encoding("task.txt", "compressed.bin")) {
-		std::cout << "Файл закодирован\n";
+		std::cout << "Файл закодирован" << std::endl;
 		worker.print_table();
 	}
 
@@ -61,12 +61,12 @@ int main()
 	double s1 = f1.tellg();
 	double s2 = f2.tellg();
 
-	std::cout << "\nРезультаты\n";
-	std::cout << "Исходный размер: " << s1 << " байт\n";
-	std::cout << "Сжатый размер: " << s2 << " байт\n";
-	std::cout << "Коэффициент сжатия (больше - лучше): " << s1 / s2 << "\n";
+	std::cout << std::endl << "Результаты" << std::endl;
+	std::cout << "Исходный размер: " << s1 << " байт" << std::endl;
+	std::cout << "Сжатый размер: " << s2 << " байт" << std::endl;
+	std::cout << "Коэффициент сжатия (больше - лучше): " << s1 / s2 << std::endl;
 
-	std::cout << "\nДекодированный текст лежит в restored.txt\n";
+	std::cout << std::endl << "Декодированный текст лежит в restored.txt" << std::endl;
 
 	return 0;
 }
