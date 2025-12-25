@@ -83,7 +83,7 @@ void processFano(std::wstring text)
 	shannonFano(0, symbols.size() - 1, symbols);
 
 	std::wcout << L"Результаты Шеннон-Фано" << std::endl;
-	std::wcout << L"Символ | Количество | Код" << std::endl;
+	std::wcout << L"Символ | Количество | Код | Биты" << std::endl;
 
 	for (const auto& s : symbols) {
 		if (s.character == L' ') std::wcout << L"пробел";
@@ -91,7 +91,7 @@ void processFano(std::wstring text)
 
 		std::wcout << L" | " << s.count << L" | ";
 		for (const auto& c : s.code) std::wcout << c;
-		std::wcout << std::endl;
+		std::wcout << L" | " << s.code.length() * s.count << std::endl;
 	}
 }
 
